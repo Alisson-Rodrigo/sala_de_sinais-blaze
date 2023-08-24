@@ -13,7 +13,7 @@ sleep(5)
 #Mensagens Padrao
 analise = 'Analisando...\n\n☠️ PIRATA DO DOUBLE ☠️'
 win = 'Green do Double\nPAGA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n☠️ PIRATA DO DOUBLE ☠️'
-win_branco = '⬜ Green do branco ⬜\nRECEBA TUDO!!\n\n ☠️ PIRATA DO DOUBLE ☠️'
+win_branco = '⬜ Green do branco ⬜\nRECEBA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n ☠️ PIRATA DO DOUBLE ☠️'
 loss = 'LOSS 🟥\nEssa não deu!\nPare e volte mais tarde\n\n☠️ PIRATA DO DOUBLE ☠️'
 #nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal'
 contador_win_brancos = 0
