@@ -1,17 +1,19 @@
 import typing
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QWidget, QPushButton
-from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtPrintSupport import *
-from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow
-
+from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 import sys
-import FlightPrice
+import requests
+from selenium import webdriver
+from time import sleep
+import selenium
+from selenium.webdriver.remote.webdriver import By
+import threading
 
 
 from tela_principal import Tela_Principal
@@ -19,122 +21,181 @@ from tela_principal import Tela_Principal
 class Ui_Main(object):
     def setupUi(self, Main):
         Main.setObjectName("Main")
-        Main.resize(600, 400)
+        Main.resize(800, 650)
 
         self.QtStack = QtWidgets.QStackedLayout()
 
         self.stack0 = QtWidgets.QMainWindow()
-        self.stack1 = QtWidgets.QMainWindow()
-
-        self.tela_inicial = Tela_Inicial()
-        self.tela_inicial.setupUi(self.stack0)
 
         self.tela_principal = Tela_Principal()
-        self.tela_principal.setupUi(self.stack1)
+        self.tela_principal.setupUi(self.stack0)
 
         self.QtStack.addWidget(self.stack0)
-        self.QtStack.addWidget(self.stack1)
+
+@pyqtSlot()
+class SeleniumThread(QThread):
+    finished = pyqtSignal()
+
+    def __init__(self, main_instance):
+        super(SeleniumThread, self).__init__()
+        self.main_instance = main_instance
+
+    def run(self):
+        self.main_instance.iniciar_servidor()
+        self.finished.emit()
 
 
-class Main(QtWidgets.QMainWindow, Ui_Main):
-    def __init__(self,parent=None):
-        super(Main,self).__init__(parent)
+class Main(QMainWindow, Ui_Main):
+    def __init__(self, parent=None):
+        super(Main, self).__init__(parent)
         self.setupUi(self)
+        self.selenium_thread = SeleniumThread(self)  # Passa 'self' como 'main_instance'
+        self.tela_principal.pushButton.clicked.connect(self.informacoes_servidor)
 
-        self.tela_inicial.pushButton_2.clicked.connect(self.fechar_programa)
-        self.tela_inicial.pushButton.clicked.connect(self.buscar_viagens)
+        #Mensagens Padrao
+        self.analise = 'ATENÇÃO, POSSIVEL ENTRADA.\nAnalisando...\n\n☠️ PIRATA DO DOUBLE ☠️'
+        self.win = 'Green do Double\nPAGA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n☠️ PIRATA DO DOUBLE ☠️'
+        self.win_branco = '⬜ Green do branco ⬜\nRECEBA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n ☠️ PIRATA DO DOUBLE ☠️'
+        self.loss = 'LOSS 🟥\nEssa não deu!\nPare e volte mais tarde\n\n☠️ PIRATA DO DOUBLE ☠️'
+        self.nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal\n\n☠️ PIRATA DO DOUBLE ☠️'
 
-        self.tela_principal.pushButton_3.clicked.connect(self.fechar_programa)
-        self.tela_principal.pushButton.clicked.connect(self.voltar_tela)
-        
-    def buscar_viagens (self):
-        origem = self.tela_inicial.lineEdit_4.text()
-        destino = self.tela_inicial.lineEdit_5.text()
-        data_ida = self.tela_inicial.lineEdit_7.text()
-        data_volta = self.tela_inicial.lineEdit_8.text()
-        if origem == "" or destino == "" or data_ida == "" or data_volta == "":
-            QMessageBox.about(self, "Erro", "Preencha todos os campos")
+        self.tela_principal.pushButton_2.clicked.connect(self.fechar_programa)
+        self.tela_principal.pushButton.clicked.connect(self.informacoes_servidor)
+
+
+    def informacoes_servidor (self):
+        self.id_telegram = self.tela_principal.lineEdit.text()
+        self.token = self.tela_principal.lineEdit_2.text()
+
+        if self.id_telegram == '' or self.token == '':
+            QMessageBox.about(self, "Erro", "Preencha todos os campos!")
         else:
-            pacote = FlightPrice.Melhores_voos(origem, destino, data_ida, data_volta)
-            QMessageBox.about(self, "Um momento", "Aguarde enquanto buscamos os voos")
-            self.dados = pacote.buscar_voos()
-            self.mostrar_tela_principal()
-            self.tela_inicial.lineEdit_4.clear()
-            self.tela_inicial.lineEdit_5.clear()
-            self.tela_inicial.lineEdit_7.clear()
-            self.tela_inicial.lineEdit_8.clear()
+            self.selenium_thread.start()
+            QMessageBox.about(self, "Sucesso", "Servidor iniciado com sucesso!")
+            QMessageBox.about(self, "ATENÇÃO", "Confira o seu telegram!\nCaso não tenha iniciado, verifique se o ID e o Token estão corretos!")
 
-    def voltar_tela(self):
-        self.QtStack.setCurrentIndex(0)
+    def esperar(self):
+        while True:
+            try:
+                self.driver.find_element(By.CLASS_NAME,'time-left').find_element(By.TAG_NAME,'span').text
+                break
+            except:
+                pass
+            
+        while True:
+            try:
+                self.driver.find_element(By.CLASS_NAME,'time-left').find_element(By.TAG_NAME,'span').text
+            except:
+                break
+                
+    def retornar_historico(self):
+        return [i['color'] for i in requests.get('https://blaze.com/api/roulette_games/recent').json()][::-1]
 
-    def mostrar_tela_principal(self):
-        self.QtStack.setCurrentIndex(1)
-        
-        if self.dados != 'Não ha voos disponiveis para esta localidade.':
-            if 'voo1' in self.dados:
-                self.tela_principal.lineEdit.setText(self.dados['voo1']['companhia'])
-                self.tela_principal.lineEdit_2.setText(self.dados['voo1']['preço'])
-                self.tela_principal.lineEdit_3.setText(self.dados['voo1']['horario_partida'])
-                self.tela_principal.lineEdit_4.setText(self.dados['voo1']['horario_chegada'])
-            else:
-                self.tela_principal.lineEdit.setText("Não há voos")
-                self.tela_principal.lineEdit_2.setText("Não há voos")
-                self.tela_principal.lineEdit_3.setText("Não há voos")
-                self.tela_principal.lineEdit_4.setText("Não há voos")
+                    
+    def retornar_ultimo(self):
+        return requests.get('https://blaze.com/api/roulette_games/current').json()['color']
 
-            if 'voo2' in self.dados:
-                self.tela_principal.lineEdit_5.setText(self.dados['voo2']['companhia'])
-                self.tela_principal.lineEdit_6.setText(self.dados['voo2']['preço'])
-                self.tela_principal.lineEdit_7.setText(self.dados['voo2']['horario_partida'])
-                self.tela_principal.lineEdit_8.setText(self.dados['voo2']['horario_chegada'])
-            else:
-                self.tela_principal.lineEdit_5.setText("Não há voos")
-                self.tela_principal.lineEdit_6.setText("Não há voos")
-                self.tela_principal.lineEdit_7.setText("Não há voos")
-                self.tela_principal.lineEdit_8.setText("Não há voos")
-        
-            if 'voo3' in self.dados:
-                self.tela_principal.lineEdit_9.setText(self.dados['voo3']['companhia'])
-                self.tela_principal.lineEdit_10.setText(self.dados['voo3']['preço'])
-                self.tela_principal.lineEdit_11.setText(self.dados['voo3']['horario_partida'])
-                self.tela_principal.lineEdit_12.setText(self.dados['voo3']['horario_chegada'])
-            else:
-                self.tela_principal.lineEdit_9.setText("Não há voos")
-                self.tela_principal.lineEdit_10.setText("Não há voos")
-                self.tela_principal.lineEdit_11.setText("Não há voos")
-                self.tela_principal.lineEdit_12.setText("Não há voos")
+    def martin_gale(self,gale,ultimo):
+        self.enviar_mensagem(gale)
+        self.esperar()
+        sleep(1.5)
+        ultimo_ = self.retornar_ultimo()
+        if ultimo_ != ultimo and ultimo_ != 0:
+            self.enviar_mensagem(self.win)
+            return True
+        elif ultimo_ == 0: 
+            self.enviar_mensagem(self.win_branco)
+            return True
+                    
+    def enviar_mensagem(self,mensagem):
+        bot_token = f'{self.token}'
+        chat_id = f'{self.id_telegram}'
+        url_blaze = ''
+        url = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={chat_id}&text={mensagem}\n{url_blaze}&parse_mode=Markdown'
+        requests.get(url)
 
-            if 'voo4' in self.dados:
-                self.tela_principal.lineEdit_13.setText(self.dados['voo4']['companhia'])
-                self.tela_principal.lineEdit_14.setText(self.dados['voo4']['preço'])
-                self.tela_principal.lineEdit_15.setText(self.dados['voo4']['horario_partida'])
-                self.tela_principal.lineEdit_16.setText(self.dados['voo4']['horario_chegada'])
-            else:
-                self.tela_principal.lineEdit_13.setText("Não há voos")
-                self.tela_principal.lineEdit_14.setText("Não há voos")
-                self.tela_principal.lineEdit_15.setText("Não há voos")
-                self.tela_principal.lineEdit_16.setText("Não há voos")
+    def run_selenium(self):
+        app_selenium = QApplication(sys.argv)
+        selenium_app = Main()
+        selenium_app.iniciar_servidor()
+        app_selenium.exec_()
 
-            if 'voo5' in self.dados:
-                self.tela_principal.lineEdit_17.setText(self.dados['voo5']['companhia'])
-                self.tela_principal.lineEdit_18.setText(self.dados['voo5']['preço'])
-                self.tela_principal.lineEdit_19.setText(self.dados['voo5']['horario_partida'])
-                self.tela_principal.lineEdit_20.setText(self.dados['voo5']['horario_chegada'])
-            else:
-                self.tela_principal.lineEdit_17.setText("Não há voos")
-                self.tela_principal.lineEdit_18.setText("Não há voos")
-                self.tela_principal.lineEdit_19.setText("Não há voos")
-                self.tela_principal.lineEdit_20.setText("Não há voos")
-        else:
-            QMessageBox.about(self, "Erro", "Não há voos disponíveis")
+    def iniciar_servidor(self):
+        self.driver = webdriver.Chrome()
+        self.driver.get('https://blaze.com/pt/games/double')
+        sleep(5)
+
+        cor = ['Branco','Preto','Vermelho']
+        simbolo = ['⬜','⬛','🟥']
+        print('Bot Grupo de sinais iniciado ...')
+        self.enviar_mensagem('PIRATA DO DOUBLE INICIADO\nVAMOS PRA CIMA!\n\n☠️ PIRATA DO DOUBLE ☠️')
+        self.contador_win = 0
+        self.contador_loss = 0
+        while True:
+            try:
+                print('ok')
+                self.esperar()
+                sleep(1.5)
+                historico = self.retornar_historico()
+                ultimo = self.retornar_ultimo()
+                historico.append(ultimo)
+                padrao = historico[-4:]
+                print(padrao)
+                confirmacao = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco'
+                gale1 = f'Vamos para o gale 1 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
+                gale2 = f'Vamos para o gale 2 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
+
+                
+                if padrao == [1,1,1,1] or padrao == [2,2,2,2] or padrao == [1,2,1,2] or padrao == [2,1,2,1]:                
+                    self.enviar_mensagem(self.analise)
+                    self.esperar()
+                    sleep(1.5)
+                    ultimo = self.retornar_ultimo()
+                    while True:
+                        if ultimo == padrao[0]:
+                            self.enviar_mensagem(confirmacao)
+                            self.esperar()
+                            sleep(1.5)
+                            ultimo_ = self.retornar_ultimo()
+                            if ultimo_ != ultimo and ultimo_ != 0:
+                                self.enviar_mensagem(self.win)
+                                self.contador_win += 1
+                                self.tela_principal.lineEdit_3.setText(str(self.contador_win))
+                                break
+                            elif ultimo_ == 0:
+                                self.enviar_mensagem(self.win_branco)
+                                self.contador_win += 1
+                                break
+                            else:
+                                if self.martin_gale(gale1,ultimo):
+                                    break
+                                else:
+                                    if self.martin_gale(gale2,ultimo):
+                                        break
+                                    else:
+                                        self.enviar_mensagem(self.loss)
+                                        self.contador_loss += 1
+                                        self.tela_principal.lineEdit_4.setText(str(self.contador_loss))
+                                        break 
+                        else:
+                            self.enviar_mensagem(self.nao_confirmacao)
+                            break
+            except Exception as e:
+                print(e)
+                self.driver.get('https://blaze.com/pt/games/double')
+                sleep(10)
+                pass
         
      
     def fechar_programa(self):
+        self.enviar_mensagem(f'PIRATA DO DOUBLE FINALIZADO\nPLACAR ATUAL: {self.contador_win}🟩 X {self.contador_loss}🟥\n\n☠️ PIRATA DO DOUBLE ☠️')
+        self.driver.quit()
         sys.exit(app.exec_())
+
         
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)    
+    app = QApplication(sys.argv)   
     show_main = Main()
     sys.exit(app.exec_())
         
