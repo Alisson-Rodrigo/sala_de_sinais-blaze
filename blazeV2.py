@@ -111,8 +111,6 @@ while True:
                                 break
                             else:
                                 enviar_mensagem(loss)
-                                print (contador_win, contador_loss)
-                                contador_loss += 1
                                 break 
                 else:
                     enviar_mensagem(nao_confirmacao)
