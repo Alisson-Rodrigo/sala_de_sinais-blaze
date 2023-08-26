@@ -165,6 +165,33 @@ class Tela_Principal(object):
         self.pushButton_3.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pushButton_3.setStyleSheet("color: white;")
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setGeometry(QtCore.QRect(400, 560, 111, 31))
+        font = QtGui.QFont()
+        font.setFamily("Mistral")
+        font.setPointSize(15)
+        self.pushButton_4.setFont(font)
+        self.pushButton_4.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_4.setStyleSheet("QPushButton {\n"
+"border-top: 1px solid gray;\n"
+"border-bottom: 1px solid gray;\n"
+"border-left: 1px solid orange;\n"
+"border-right:1px solid orange;\n"
+"border-radius: 10px 10px;\n"
+"color: white;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"border-top: 1px solid gray;\n"
+"border-bottom: 1px solid gray;\n"
+"border-left: 1px solid orange;\n"
+"border-right:1px solid orange;\n"
+"border-radius: 10px 10px;\n"
+"color: black;\n"
+"background-color: white;\n"
+"}\n"
+"")
+        self.pushButton_4.setObjectName("pushButton_4")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -184,3 +211,4 @@ class Tela_Principal(object):
         self.lineEdit_4.setText(_translate("MainWindow", "0"))
         self.pushButton_2.setText(_translate("MainWindow", "⊗"))
         self.pushButton_3.setText(_translate("MainWindow", "CONTATO"))
+        self.pushButton_4.setText(_translate("MainWindow", "ATUALIZAR"))

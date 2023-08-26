@@ -381,6 +381,49 @@ padding:2px;</string>
      <string>CONTATO</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>560</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Mistral</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+border-top: 1px solid gray;
+border-bottom: 1px solid gray;
+border-left: 1px solid orange;
+border-right:1px solid orange;
+border-radius: 10px 10px;
+color: white;
+}
+
+QPushButton:hover {
+border-top: 1px solid gray;
+border-bottom: 1px solid gray;
+border-left: 1px solid orange;
+border-right:1px solid orange;
+border-radius: 10px 10px;
+color: black;
+background-color: white;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>ATUALIZAR</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

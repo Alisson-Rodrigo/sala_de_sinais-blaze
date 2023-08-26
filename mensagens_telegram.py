@@ -7,4 +7,7 @@ def enviar_mensagem(mensagem):
     url = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={chat_id}&text={mensagem}\n{url_blaze}&parse_mode=Markdown'
     requests.get(url)
 
-enviar_mensagem("VAMOS PAUSAR POR UNS MINUTOS, VOLTAMOS LOGO!\n REALIZAREMOS UMA ATUALIZAÇÃO NO BOT\n\n☠️ PIRATA DO DOUBLE ☠️")
+contador_win = 50
+contador_loss = 1
+enviar_mensagem(f'☠️ PIRATA DO DOUBLE ☠️\n\n{contador_win} 🟩 X {contador_loss} 🟥\nPLACAR ATÉ O MOMENTO\n\n🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩')
+#enviar_mensagem(f'☠️ PIRATA DO DOUBLE ☠️\n\nATUALIZAÇÕES DEFINIDAS\n\n🟩🟩')
