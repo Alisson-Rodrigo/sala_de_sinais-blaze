@@ -1,19 +1,16 @@
 import typing
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSlot
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import *
-from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QObject
+from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
 import sys
 import requests
 from selenium import webdriver
 from time import sleep
-import selenium
 from selenium.webdriver.remote.webdriver import By
-import threading
 
 
 from tela_principal import Tela_Principal
