@@ -6,7 +6,7 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import *
-from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, QObject
 import sys
 import requests
 from selenium import webdriver
@@ -63,8 +63,11 @@ class Main(QMainWindow, Ui_Main):
 
         self.tela_principal.pushButton_2.clicked.connect(self.fechar_programa)
         self.tela_principal.pushButton.clicked.connect(self.informacoes_servidor)
-        self.tela_principal.pushButton_4.clicked.connect(self.atualizar_placar)
+        self.tela_principal.pushButton_4.clicked.connect(self.atualizar_placar_slot)
+        self.tela_principal.pushButton_3.clicked.connect(self.contato)
 
+    def contato(self):
+        QMessageBox.about(self, "Contato", "Telegram: @piratadodouble\n\nEmail:)")
 
     def informacoes_servidor (self):
         self.tela_principal.pushButton.clicked.disconnect()
@@ -125,13 +128,23 @@ class Main(QMainWindow, Ui_Main):
         selenium_app.iniciar_servidor()
         app_selenium.exec_()
 
-    def atualizar_placar(self):
-        print ('Placar atualizado')
-        self.tela_principal.lineEdit_3.setText(str(self.contador_win))
-        self.tela_principal.lineEdit_4.setText(str(self.contador_loss))
-            
+    @pyqtSlot()
+    def atualizar_placar_slot(self):
+        self.atualizar_placar(self.contador_win, self.contador_loss)
+
+    def atualizar_placar(self, contador_win, contador_loss):
+        print(contador_win, contador_loss)
+        self.tela_principal.lineEdit_3.setText(str(contador_win))
+        self.tela_principal.lineEdit_4.setText(str(contador_loss))
+
     def iniciar_servidor(self):
-        self.driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--ignore-certificate-errors')
+        options.add_argument('--ignore-ssl-errors')
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+    
+        self.driver = webdriver.Chrome(options=options)
         self.driver.get('https://blaze.com/pt/games/double')
         sleep(5)
 
@@ -168,11 +181,12 @@ class Main(QMainWindow, Ui_Main):
                             if ultimo_ != ultimo and ultimo_ != 0:
                                 self.enviar_mensagem(self.win)
                                 self.contador_win += 1
+                                self.atualizar_placar(self.contador_win, self.contador_loss)
                                 break
                             elif ultimo_ == 0:
                                 self.enviar_mensagem(self.win_branco)
-                                self.tela_principal.lineEdit_3.setText(str(self.contador_win))
                                 self.contador_win += 1
+                                self.atualizar_placar(self.contador_win, self.contador_loss)
                                 break
                             else:
                                 if self.martin_gale(gale1,ultimo):
@@ -183,7 +197,7 @@ class Main(QMainWindow, Ui_Main):
                                     else:
                                         self.enviar_mensagem(self.loss)
                                         self.contador_loss += 1
-                                        self.atualizar_placar('loss')
+                                        self.atualizar_placar(self.contador_win, self.contador_loss)
                                         break 
                         else:
                             self.enviar_mensagem(self.nao_confirmacao)
