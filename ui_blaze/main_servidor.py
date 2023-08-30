@@ -102,15 +102,15 @@ class Main(QMainWindow, Ui_Main):
     def retornar_ultimo(self):
         return requests.get('https://blaze.com/api/roulette_games/current').json()['color']
 
-    def martin_gale(self,gale,ultimo):
+    def martin_gale(self,gale,ultimo,aux):
         self.enviar_mensagem(gale)
         self.esperar()
         sleep(1.5)
         ultimo_ = self.retornar_ultimo()
         if ultimo_ != ultimo and ultimo_ != 0:
-            if gale == 'gale1':
+            if aux == 'gale1':
                 self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale1.webp', 'rb'))
-            elif gale == 'gale2':
+            elif aux == 'gale2':
                 self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale2.webp', 'rb'))
             return True
         elif ultimo_ == 0: 
@@ -198,10 +198,12 @@ class Main(QMainWindow, Ui_Main):
                                 self.atualizar_placar(self.contador_win, self.contador_loss)
                                 break
                             else:
-                                if self.martin_gale(gale1,ultimo):
+                                aux = 'gale1'
+                                if self.martin_gale(gale1,ultimo,aux):
                                     break
                                 else:
-                                    if self.martin_gale(gale2,ultimo):
+                                    aux = 'gale2'
+                                    if self.martin_gale(gale2,ultimo,aux):
                                         break
                                     else:
                                         self.enviar_mensagem(self.loss)
