@@ -11,6 +11,8 @@ import requests
 from selenium import webdriver
 from time import sleep
 from selenium.webdriver.remote.webdriver import By
+import telebot
+import datetime
 
 
 from tela_principal import Tela_Principal
@@ -106,10 +108,13 @@ class Main(QMainWindow, Ui_Main):
         sleep(1.5)
         ultimo_ = self.retornar_ultimo()
         if ultimo_ != ultimo and ultimo_ != 0:
-            self.enviar_mensagem(self.win)
+            if gale == 'gale1':
+                self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale1.webp', 'rb'))
+            elif gale == 'gale2':
+                self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale2.webp', 'rb'))
             return True
         elif ultimo_ == 0: 
-            self.enviar_mensagem(self.win_branco)
+            self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale1.webp', 'rb')) 
             return True
                     
     def enviar_mensagem(self,mensagem):
@@ -136,6 +141,7 @@ class Main(QMainWindow, Ui_Main):
 
     def iniciar_servidor(self):
         options = webdriver.ChromeOptions()
+        self.telegram = telebot.TeleBot(self.token)
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--ignore-ssl-errors')
         options.add_argument('--headless')
@@ -148,7 +154,13 @@ class Main(QMainWindow, Ui_Main):
         cor = ['Branco','Preto','Vermelho']
         simbolo = ['⬜','⬛','🟥']
         print('Bot Grupo de sinais iniciado ...')
-        self.enviar_mensagem('PIRATA DO DOUBLE INICIADO\nVAMOS PRA CIMA!\n\n☠️ PIRATA DO DOUBLE ☠️')
+        hora_atual = datetime.datetime.now().strftime('%H:%M')
+        if hora_atual >= '06:00' and hora_atual <= '12:00':
+            self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/iniciar_bot.webp', 'rb'))
+        elif hora_atual >= '12:00' and hora_atual <= '18:00':
+            self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/boa_tarde.webp', 'rb'))
+        elif hora_atual >= '18:00' and hora_atual <= '23:59':
+            self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/boa_noite.webp', 'rb'))                      
         while True:
             try:
                 print('ok')
@@ -176,12 +188,12 @@ class Main(QMainWindow, Ui_Main):
                             sleep(1.5)
                             ultimo_ = self.retornar_ultimo()
                             if ultimo_ != ultimo and ultimo_ != 0:
-                                self.enviar_mensagem(self.win)
+                                self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale1.webp', 'rb'))                        
                                 self.contador_win += 1
                                 self.atualizar_placar(self.contador_win, self.contador_loss)
                                 break
                             elif ultimo_ == 0:
-                                self.enviar_mensagem(self.win_branco)
+                                self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/gale1.webp', 'rb'))                             
                                 self.contador_win += 1
                                 self.atualizar_placar(self.contador_win, self.contador_loss)
                                 break
@@ -194,7 +206,8 @@ class Main(QMainWindow, Ui_Main):
                                     else:
                                         self.enviar_mensagem(self.loss)
                                         self.contador_loss += 1
-                                        self.atualizar_placar(self.contador_win, self.contador_loss)
+                                        self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/red.webp', 'rb')) 
+                                        sleep(500)
                                         break 
                         else:
                             self.enviar_mensagem(self.nao_confirmacao)
