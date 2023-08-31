@@ -52,12 +52,8 @@ class Main(QMainWindow, Ui_Main):
         self.tela_principal.pushButton.clicked.connect(self.informacoes_servidor)
         self.contador_win = 0
         self.contador_loss = 0
-
         #Mensagens Padrao
         self.analise = 'ATENÇÃO, POSSIVEL ENTRADA.\nAnalisando...\n\n☠️ PIRATA DO DOUBLE ☠️'
-        self.win = 'Green do Double\nPAGA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n☠️ PIRATA DO DOUBLE ☠️'
-        self.win_branco = '⬜ Green do branco ⬜\nRECEBA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n ☠️ PIRATA DO DOUBLE ☠️'
-        self.loss = 'LOSS 🟥\nEssa não deu!\nPare e volte mais tarde\n\n☠️ PIRATA DO DOUBLE ☠️'
         self.nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal\n\n☠️ PIRATA DO DOUBLE ☠️'
 
         self.tela_principal.pushButton_2.clicked.connect(self.fechar_programa)
@@ -151,6 +147,9 @@ class Main(QMainWindow, Ui_Main):
         self.driver.get('https://blaze.com/pt/games/double')
         sleep(5)
 
+        analise = 'ATENÇÃO, POSSIVEL ENTRADA.\nAnalisando...\n\n☠️ PIRATA DO DOUBLE ☠️'
+        nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal\n\n☠️ PIRATA DO DOUBLE ☠️'
+
         cor = ['Branco','Preto','Vermelho']
         simbolo = ['⬜','⬛','🟥']
         print('Bot Grupo de sinais iniciado ...')
@@ -177,7 +176,7 @@ class Main(QMainWindow, Ui_Main):
 
                 
                 if padrao == [1,1,1,1] or padrao == [2,2,2,2] or padrao == [1,2,1,2] or padrao == [2,1,2,1]:                
-                    self.enviar_mensagem(self.analise)
+                    aux_analise = self.telegram.send_message(self.id_telegram, analise)
                     self.esperar()
                     sleep(1.5)
                     ultimo = self.retornar_ultimo()
@@ -206,13 +205,15 @@ class Main(QMainWindow, Ui_Main):
                                     if self.martin_gale(gale2,ultimo,aux):
                                         break
                                     else:
-                                        self.enviar_mensagem(self.loss)
                                         self.contador_loss += 1
                                         self.telegram.send_sticker(self.id_telegram, open('C:/Users/PurooLight/Documents/GitHub/sala_de_sinais/imagens_sala_sinais/red.webp', 'rb')) 
                                         sleep(500)
                                         break 
                         else:
-                            self.enviar_mensagem(self.nao_confirmacao)
+                            aux_nao_confirmação = self.telegram.send_message(self.id_telegram, nao_confirmacao)
+                            sleep(10)
+                            self.telegram.delete_message(self.id_telegram, aux_analise.message_id)
+                            self.telegram.delete_message(self.id_telegram, aux_nao_confirmação.message_id)
                             break
             except Exception as e:
                 print(e)
