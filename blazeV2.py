@@ -11,11 +11,11 @@ driver.get('https://blaze.com/pt/games/double')
 sleep(5)
 
 #Mensagens Padrao
-analise = 'Analisando...\n\n☠️ PIRATA DO DOUBLE ☠️'
+analise = 'POSSIVEL ENTRADA, ATENÇÃO.\nANALISANDO...\n\n☠️ PIRATA DO DOUBLE ☠️'
 win = 'Green do Double\nPAGA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n☠️ PIRATA DO DOUBLE ☠️'
 win_branco = '⬜ Green do branco ⬜\nRECEBA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n ☠️ PIRATA DO DOUBLE ☠️'
 loss = 'LOSS 🟥\nEssa não deu!\nPare e volte mais tarde\n\n☠️ PIRATA DO DOUBLE ☠️'
-#nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal'
+nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal\n\n☠️ PIRATA DO DOUBLE ☠️'
 contador_win_brancos = 0
 ##############################
 
@@ -114,7 +114,7 @@ while True:
                                 contador_loss += 1
                                 break 
                 else:
-                    #enviar_mensagem(nao_confirmacao)
+                    enviar_mensagem(nao_confirmacao)
                     break
     except Exception as e:
         print(e)
