@@ -11,12 +11,19 @@ driver.get('https://blaze.com/pt/games/double')
 sleep(5)
 
 #Mensagens Padrao
+<<<<<<< HEAD
 analise = 'POSSIVEL ENTRADA, ATENÇÃO.\nANALISANDO...\n\n☠️ PIRATA DO DOUBLE ☠️'
+=======
+analise = 'ATENÇÃO, POSSIVEL ENTRADA.\nAnalisando...\n\n☠️ PIRATA DO DOUBLE ☠️'
+>>>>>>> 625a1343d8acc4e5ef90befe2d01f5399b3705c6
 win = 'Green do Double\nPAGA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n☠️ PIRATA DO DOUBLE ☠️'
 win_branco = '⬜ Green do branco ⬜\nRECEBA TUDO!!🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩\n\n ☠️ PIRATA DO DOUBLE ☠️'
 loss = 'LOSS 🟥\nEssa não deu!\nPare e volte mais tarde\n\n☠️ PIRATA DO DOUBLE ☠️'
 nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal\n\n☠️ PIRATA DO DOUBLE ☠️'
+<<<<<<< HEAD
 contador_win_brancos = 0
+=======
+>>>>>>> 625a1343d8acc4e5ef90befe2d01f5399b3705c6
 ##############################
 
 def esperar():
@@ -98,6 +105,7 @@ while True:
                     if ultimo_ != ultimo and ultimo_ != 0:
                         enviar_mensagem(win)
                         contador_win += 1
+                        print (contador_win, contador_loss)
                         break
                     elif ultimo_ == 0:
                         enviar_mensagem(win_branco)
@@ -111,7 +119,6 @@ while True:
                                 break
                             else:
                                 enviar_mensagem(loss)
-                                contador_loss += 1
                                 break 
                 else:
                     enviar_mensagem(nao_confirmacao)
