@@ -1,13 +1,12 @@
+from time import sleep
+
+import requests
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import By
-from time import sleep
-import requests
-
-
 
 driver = webdriver.Chrome()
-driver.get('https://blaze.com/pt/games/double')
+driver.get('https://blaze1.space/pt/games/double')
 sleep(5)
 
 #Mensagens Padrao
@@ -35,11 +34,11 @@ def esperar():
             break
         
 def retornar_historico():
-    return [i['color'] for i in requests.get('https://blaze.com/api/roulette_games/recent').json()][::-1]
+    return [i['color'] for i in requests.get('https://blaze1.space/api/roulette_games/recent').json()][::-1]
 
             
 def retornar_ultimo():
-    return requests.get('https://blaze.com/api/roulette_games/current').json()['color']
+    return requests.get('https://blaze1.space/api/roulette_games/current').json()['color']
 
 def martin_gale(gale,ultimo):
     enviar_mensagem(gale)
